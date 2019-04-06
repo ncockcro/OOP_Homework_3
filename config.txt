@@ -1,0 +1,5 @@
+Length: 9
+Width: 9
+Coyote: 4
+Roadrunner: 4
+Cycles: 100
