@@ -59,7 +59,7 @@ void Simulation::MainGame() {
 	int count = 0;
 	GetStartingInfo();
 	PlotAgentsToBoard();
-	cout << "Starting board:" << endl;
+	cout << endl << "Starting board:" << endl;
 	PrintBoard();
 	SaveAgentCounts();
 	cout << "------------------------------------" << endl;
@@ -134,7 +134,6 @@ void Simulation::MainGame() {
 		cout << endl << "Simulation ended early due to the board being empty!" << endl;
 	}
 
-	system("pause");
 }
 
 /**
@@ -150,6 +149,7 @@ void Simulation::GetStartingInfo() {
 
 	fstream outputConfigFile("config.txt");
 	string input;
+	bool invalidInput = true;
 
 	// If there is no leaderboard file, this will initialize it
 	if (!outputConfigFile) {
@@ -168,29 +168,69 @@ void Simulation::GetStartingInfo() {
 	inputConfigFile.open("config.txt");
 	while (inputConfigFile >> input) {
 		
+		// Making suring the "length" is a valid input from config file
 		if (input == "Length:") {
 			inputConfigFile >> input;
-			m_length = stoi(input);
+
+			if (IsDigits(input) && stoi(input) >= 2) {
+				m_length = stoi(input);
+			}
+			else {
+				cout << "Error: Length needs to be a number and greater or equal to 2." << endl;
+				invalidInput = false;
+			}
 		}
 
+		// Making suring the "width" is a valid input from config file
 		if (input == "Width:") {
 			inputConfigFile >> input;
-			m_width = stoi(input);
+
+			if (IsDigits(input) && stoi(input) >= 2) {
+				m_width = stoi(input);
+			}
+			else {
+				cout << "Error: Width needs to be a number and greater or equal to 2." << endl;
+				invalidInput = false;
+			}
 		}
 
+		// Making suring the "coyote" is a valid input from config file
 		if (input == "Coyote:") {
 			inputConfigFile >> input;
-			m_coyotes = stoi(input);
+
+			if (IsDigits(input) && stoi(input) >= 0) {
+				m_coyotes = stoi(input);
+			}
+			else {
+				cout << "Error: Coyote count needs to be a number and greater or equal to 0." << endl;
+				invalidInput = false;
+			}
 		}
 
+		// Making suring the "roadrunner" is a valid input from config file
 		if (input == "Roadrunner:") {
 			inputConfigFile >> input;
-			m_roadrunners = stoi(input);
+
+			if (IsDigits(input) && stoi(input) >= 0) {
+				m_roadrunners = stoi(input);
+			}
+			else {
+				cout << "Error: Roadrunner count needs to be a number and greater or equal to 0." << endl;
+				invalidInput = false;
+			}
 		}
 
+		// Making suring the "cycle" is a valid input from config file
 		if (input == "Cycles:") {
 			inputConfigFile >> input;
-			m_cycles = stoi(input);
+
+			if (IsDigits(input) && stoi(input) >= 1) {
+				m_cycles = stoi(input);
+			}
+			else {
+				cout << "Error: Cycle count needs to be a number and greater or equal to 1." << endl;
+				invalidInput = false;
+			}
 		}
 
 
@@ -198,6 +238,11 @@ void Simulation::GetStartingInfo() {
 	inputConfigFile.close();
 
 	outputConfigFile.close();
+
+	// If anything was invalid from the config file, exit the simulation
+	if (!invalidInput) {
+		exit(1);
+	}
 
 	m_agents.reserve(m_width * m_length * 5);
 
@@ -501,4 +546,16 @@ void Simulation::SaveAgentCounts() {
 
 	m_coyoteCounts.push_back(coyoteCount);
 	m_roadrunnerCounts.push_back(roadrunnerCount);
+}
+
+/**
+
+	This function will take in a string and return true if
+	it is all numbers, or false if it is not.
+
+	@param a_input, the string to be validated
+	@return bool
+	*/
+bool Simulation::IsDigits(string &a_input) {
+	return all_of(a_input.begin(), a_input.end(), ::isdigit);
 }

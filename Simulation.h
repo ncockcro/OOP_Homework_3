@@ -50,6 +50,7 @@ private:
 	bool AllRoadrunners();
 	bool EmptyBoard();
 	void SaveAgentCounts();
+	bool IsDigits(string &a_input);
 
 	int m_length;
 	int m_width;

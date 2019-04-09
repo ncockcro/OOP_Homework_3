@@ -22,7 +22,6 @@ public:
 	bool CanBreed();
 	bool IsDead();
 
-private:
 };
 
 #endif
